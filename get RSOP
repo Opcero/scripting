@@ -1,0 +1,1 @@
+Get-GPResultantSetOfPolicy -user "Contoso\username" -computer "xxxx-xx.contoso.org" -ReportType html -path 'C:\path\to\the\file.html'
