@@ -1,0 +1,14 @@
+:begin
+netsh interface set interface "ethernet 2" admin=disable
+
+netsh interface set interface "ethernet 2" admin=enable
+
+PING 1.1.1.1 
+
+Goto Begin
+
+------------------------------------------------------------------
+
+HELLO!!!!  READ THIS ::::: You will need to edit the batch file and replace the network interface name in the "Quotes" to match the network name of the one on your computer.
+
+And, in case you're wondering, the PING 1.1.1.1 is just in there to provide a delay.  Yes, you can use other methods like TIMEOUT and SLEEP.
