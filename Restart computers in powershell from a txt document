@@ -1,0 +1,5 @@
+# restart computers in powershell from txt document
+
+Restart-Computer -ComputerName (Get-content C:\Temp\computers.txt) -Force -ErrorAction SilentlyContinue -ErrorVariable NoRestart
+
+$NoRestart.targetobject | Out-File C:\path\to\file.txt
