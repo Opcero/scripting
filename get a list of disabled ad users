@@ -1,0 +1,3 @@
+$logindate = Get-Date (get-date).AddDays(-5)
+
+Search-ADAccount -AccountDisabled -ResultPageSize 2000 -ResultSetSize $null | Where-Object {$_.lastLogon -le $logindate} | Select-Object name, userPrincipalName, SamAccountName | Export-CSV "path\to\DisabledUsers.CSV" -NoTypeInformation
