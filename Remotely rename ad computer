@@ -1,0 +1,5 @@
+# passthru returns the results
+# restart restarts the computer
+# Force forces the command to run without asking for user confirmation.
+
+rename-computer -ComputerName "9100-LAPTOP2" -NewName "9100-97LAPTOP" -DomainCredential proteusinc.org\cwalden -passthru -restart -force -WhatIf
