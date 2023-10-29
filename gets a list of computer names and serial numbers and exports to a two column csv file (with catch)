@@ -1,0 +1,24 @@
+# gets a list of computer names and serial numbers and exports to a two column csv file
+# disabled computer will be omitted
+
+$computers = Get-ADComputer -Filter {enabled -eq $true} -Properties OperatingSystem
+
+$Report = 
+ForEach ($computer in $computers) {
+    write-verbose "Working on '$computer'" -verbose
+    Try {
+        $wmidata = Get-WMIObject Win32_Bios -Computername $computer.Name -ErrorAction Stop
+        [pscustomobject]@{
+            ComputerName = $computer.name
+            SerialNumber = $wmidata.serialnumber
+        }
+    }
+    catch {
+        [pscustomobject]@{
+            ComputerName = $computer.name
+            SerialNumber = "$($error[0].exception.Message)"
+        }
+    }
+}
+
+$report | Export-CSV "C:\users\me\desktop\listofpcs.csv" -NoTypeInformation
