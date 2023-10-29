@@ -1,0 +1,21 @@
+import smtplib
+from email.mime.text import MIMEText
+
+
+file = open('C:/Users/cwalden/Desktop/Automated Message/users.txt', 'r')
+email_body = file.read()
+
+fromx = 'coopers_automated_message@proteusinc.org'
+to  = 'coopers_automated_message@proteusinc.org'
+msg = MIMEText(email_body)
+msg['Subject'] = 'Users to Disable'
+msg['From'] = 'coopers_automated_message@proteusinc.org'
+msg['To'] = 'cwalden@proteusinc.org'
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.ehlo()
+server.starttls()
+server.login('coopers_automated_message@proteusinc.org', 'Ph3%Ej>g!')
+server.sendmail('coopers_automated_message@proteusinc.org', 'cwalden@proteusinc.org', msg.as_string())
+server.quit()
+exit()
