@@ -1,0 +1,34 @@
+# gets a list of computer names and serial numbers and exports to a two column csv file
+# disabled computer will be omitted
+
+# for testing
+# $computers = Get-ADComputer -Filter 'Name -like "9150*"' -Properties OperatingSystem
+# for production
+$computers = Get-ADComputer -Filter {enabled -eq $true} -Properties OperatingSystem
+
+$Report = 
+ForEach ($computer in $computers) {
+    write-verbose "Working on '$computer'" -verbose
+    Try {
+        $wmidata = Get-WMIObject Win32_Bios -Computername $computer.Name -ErrorAction Stop
+		$wmidata2 = Get-WMIObject Win32_computersystem -Computername $computer.Name -ErrorAction Stop
+        [pscustomobject]@{
+            ComputerName = $computer.name
+            SerialNumber = $wmidata.serialnumber
+			Model = $wmidata2.Model
+        }
+    }
+    catch {
+        [pscustomobject]@{
+            ComputerName = $computer.name
+            SerialNumber = "$($error[0].exception.Message)"
+			Model = "$($error[0].exception.Message)"
+        }
+    }
+}
+
+# to print out report
+# $report | Export-CSV "C:\users\cwalden.proteusinc\desktop\testpc.csv" -NoTypeInformation
+
+# to sort how csv is printed
+# $report | Sort-Object "ComputerName" | Export-CSV "C:\users\cwalden.proteusinc\desktop\testpc.csv" -NoTypeInformation
