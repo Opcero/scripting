@@ -1,0 +1,13 @@
+Import-Module ActiveDirectory
+
+# set a date range	
+$date = (get-date).adddays(-180)
+
+#list of computers whose computer password has not been set in this time frame and prints out a list in order of when they were last set.
+$ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers,DC=proteusinc,DC=org" -filter {Enabled -eq $TRUE} -Properties PasswordLastSet | Where-Object {($_.PasswordLastSet -lt $Date) -and ($_.PasswordLastSet -ne $NULL)}
+
+# Iterate through the list of computers
+#$ListOfComputersToDisable | select-object -Property Name | Out-File -FilePath 'C:\Users\cwalden\Desktop\list to disable\disabled_computers.txt' -encoding ascii
+
+# Iterate through the list of computers
+$ListOfComputersToDisable | select-object -Property Name, PasswordLastSet | sort-object -property name | Out-File -FilePath 'C:\Users\cwalden\Desktop\automated message\computers.txt' -encoding ascii
