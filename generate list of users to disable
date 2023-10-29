@@ -1,0 +1,12 @@
+Import-Module ActiveDirectory
+ 
+$inactiveDays = 180
+$neverLoggedInDays = 180
+$disableDaysInactive=(Get-Date).AddDays(-($inactiveDays))
+$disableDaysNeverLoggedIn=(Get-Date).AddDays(-($neverLoggedInDays))
+ 
+# Identify and disable users who have not logged in <$inactiveDays> days ago
+$ListOfUsersToDisable1 = Get-ADUser -SearchBase "OU=All Proteus Users,DC=proteusinc,DC=org" -Filter {Enabled -eq $TRUE} -Properties lastLogonDate, whenCreated, distinguishedName | Where-Object {($_.lastLogonDate -lt $disableDaysInactive) -and ($_.lastLogonDate -ne $NULL)}
+ 
+# Iterate through the list of users and disable their account and write the event to the custom log file  
+$ListOfUsersToDisable1 | select-object -Property name, lastLogonDate | Sort-Object -Property lastLogonDate | Out-File -FilePath 'C:\Users\cwalden\Desktop\automated message\users.txt' -encoding ascii
