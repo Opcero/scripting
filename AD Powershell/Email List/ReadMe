@@ -1,1 +1,126 @@
+1. generate a list of users to disable.
 
+Import-Module ActiveDirectory
+
+# set a date range	
+$date = (get-date).adddays(-180)
+
+#list of computers whose computer password has not been set in this time frame and prints out a list in order of when they were last set.
+$ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers,DC=proteusinc,DC=org" -filter {Enabled -eq $TRUE} -Properties PasswordLastSet | Where-Object {($_.PasswordLastSet -lt $Date) -and ($_.PasswordLastSet -ne $NULL)}
+
+# Iterate through the list of computers
+#$ListOfComputersToDisable | select-object -Property Name | Out-File -FilePath 'C:\Users\cwalden\Desktop\list to disable\disabled_computers.txt' -encoding ascii
+
+# Iterate through the list of computers
+$ListOfComputersToDisable | select-object -Property Name, PasswordLastSet | sort-object -property name | Out-File -FilePath 'C:\Users\cwalden\Desktop\automated message\computers.txt' -encoding ascii
+
+2. this will output a text file
+
+3. write a script to email that text file:
+
+import smtplib
+from email.mime.text import MIMEText
+
+
+file = open('C:/Users/cwalden/Desktop/Automated Message/users.txt', 'r')
+email_body = file.read()
+
+fromx = 'coopers_automated_message@proteusinc.org'
+to  = 'coopers_automated_message@proteusinc.org'
+msg = MIMEText(email_body)
+msg['Subject'] = 'Users to Disable'
+msg['From'] = 'coopers_automated_message@proteusinc.org'
+msg['To'] = 'cwalden@proteusinc.org'
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.ehlo()
+server.starttls()
+server.login('coopers_automated_message@proteusinc.org', 'Ph3%Ej>g!')
+server.sendmail('coopers_automated_message@proteusinc.org', 'cwalden@proteusinc.org', msg.as_string())
+server.quit()
+exit()
+
+4. after checking the file, run a script to disable the accounts and make a bespoke event ID
+
+Import-Module ActiveDirectory
+ 
+$inactiveDays = 180
+$disableDaysInactive=(Get-Date).AddDays(-($inactiveDays))
+ 
+# Identify and disable users who have not logged in <$inactiveDays> days ago
+$ListOfUsersToDisable = Get-ADUser -SearchBase "OU=All Proteus Users,DC=proteusinc,DC=org" -Filter {Enabled -eq $TRUE} -Properties lastLogonDate, whenCreated, distinguishedName | Where-Object {($_.lastLogonDate -lt $disableDaysInactive) -and ($_.lastLogonDate -ne $NULL)}
+
+# Iterate through the list of users and disable their account and write the event to the custom log file 
+$ListOfUsersToDisable | ForEach-Object {
+	Disable-ADAccount $_ -WhatIf
+#	Write-EventLog -Source "DisableUsers.ps1" -EventId 9090 -LogName Application -Message "Attempted to disable user $_ because the last login was more than $inactiveDays days ago."
+	}
+
+
+
+1a. generate a list of computers to disable
+
+Import-Module ActiveDirectory
+
+# set a date range	
+$date = (get-date).adddays(-180)
+
+#list of computers whose computer password has not been set in this time frame and prints out a list in order of when they were last set.
+$ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers,DC=proteusinc,DC=org" -filter {Enabled -eq $TRUE} -Properties PasswordLastSet | Where-Object {($_.PasswordLastSet -lt $Date) -and ($_.PasswordLastSet -ne $NULL)}
+
+# Iterate through the list of computers
+#$ListOfComputersToDisable | select-object -Property Name | Out-File -FilePath 'C:\Users\cwalden\Desktop\list to disable\disabled_computers.txt' -encoding ascii
+
+# Iterate through the list of computers
+$ListOfComputersToDisable | select-object -Property Name, PasswordLastSet | sort-object -property name | Out-File -FilePath 'C:\Users\cwalden\Desktop\automated message\computers.txt' -encoding ascii
+
+2a. this will output a text file
+
+3a. write a script to email the text file
+
+import smtplib
+from email.mime.text import MIMEText
+
+
+file = open('C:/Users/cwalden/Desktop/automated message/computers.txt', 'r')
+email_body = file.read()
+
+fromx = 'coopers_automated_message@proteusinc.org'
+to  = 'coopers_automated_message@proteusinc.org'
+msg = MIMEText(email_body)
+msg['Subject'] = 'Computers to Disable'
+msg['From'] = 'coopers_automated_message@proteusinc.org'
+msg['To'] = 'cwalden@proteusinc.org'
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.ehlo()
+server.starttls()
+server.login('coopers_automated_message@proteusinc.org', 'Ph3%Ej>g!')
+server.sendmail('coopers_automated_message@proteusinc.org', 'cwalden@proteusinc.org', msg.as_string())
+server.quit()
+exit()
+
+
+4. disable the computers and create an event log
+
+Import-Module ActiveDirectory  
+	
+# set a date range	
+$date = (get-date).adddays(-180)
+
+#list of computers whose computer password has not been set in this time frame and prints out a list in order of when they were last set.
+$ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers,DC=proteusinc,DC=org" -filter {Enabled -eq $TRUE} -Properties PasswordLastSet | Where-Object {($_.PasswordLastSet -lt $Date) -and ($_.PasswordLastSet -ne $NULL)}
+
+# Iterate through the list of computers
+$ListOfComputersToDisable | ForEach-Object {
+	Disable-ADAccount $_ -WhatIf
+#	Write-EventLog -Source "DisableComputers.ps1" -EventId 9091 -LogName Application -Message "Attempted to disable computer $_ because the last password reset was more than $date days ago."
+	}
+
+
+open task scheduler:
+
+action:
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+arguments:
+-NoProfile -NoLogo -NonInteractive -ExecutionPolicy Bypass -file "C:\Users\cwalden\Desktop\automated message\generate list of users to disable.ps1"
