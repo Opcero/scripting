@@ -1,4 +1,4 @@
-1. generate a list of users to disable.
+# 1. generate a list of users to disable.
 
 Import-Module ActiveDirectory
 
@@ -14,9 +14,9 @@ $ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers
 # Iterate through the list of computers
 $ListOfComputersToDisable | select-object -Property Name, PasswordLastSet | sort-object -property name | Out-File -FilePath 'C:\Users\cwalden\Desktop\automated message\computers.txt' -encoding ascii
 
-2. this will output a text file
+# 2. this will output a text file
 
-3. write a script to email that text file:
+# 3. write a script to email that text file:
 
 import smtplib
 from email.mime.text import MIMEText
@@ -40,7 +40,7 @@ server.sendmail('coopers_automated_message@proteusinc.org', 'cwalden@proteusinc.
 server.quit()
 exit()
 
-4. after checking the file, run a script to disable the accounts and make a bespoke event ID
+# 4. after checking the file, run a script to disable the accounts and make a bespoke event ID
 
 Import-Module ActiveDirectory
  
@@ -53,12 +53,12 @@ $ListOfUsersToDisable = Get-ADUser -SearchBase "OU=All Proteus Users,DC=proteusi
 # Iterate through the list of users and disable their account and write the event to the custom log file 
 $ListOfUsersToDisable | ForEach-Object {
 	Disable-ADAccount $_ -WhatIf
-#	Write-EventLog -Source "DisableUsers.ps1" -EventId 9090 -LogName Application -Message "Attempted to disable user $_ because the last login was more than $inactiveDays days ago."
+	Write-EventLog -Source "DisableUsers.ps1" -EventId 9090 -LogName Application -Message "Attempted to disable user $_ because the last login was more than $inactiveDays days ago."
 	}
 
 
 
-1a. generate a list of computers to disable
+# 1a. generate a list of computers to disable
 
 Import-Module ActiveDirectory
 
@@ -74,9 +74,9 @@ $ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers
 # Iterate through the list of computers
 $ListOfComputersToDisable | select-object -Property Name, PasswordLastSet | sort-object -property name | Out-File -FilePath 'C:\Users\cwalden\Desktop\automated message\computers.txt' -encoding ascii
 
-2a. this will output a text file
+# 2a. this will output a text file
 
-3a. write a script to email the text file
+# 3a. write a script to email the text file
 
 import smtplib
 from email.mime.text import MIMEText
@@ -101,7 +101,7 @@ server.quit()
 exit()
 
 
-4. disable the computers and create an event log
+# 4. disable the computers and create an event log
 
 Import-Module ActiveDirectory  
 	
@@ -114,11 +114,11 @@ $ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers
 # Iterate through the list of computers
 $ListOfComputersToDisable | ForEach-Object {
 	Disable-ADAccount $_ -WhatIf
-#	Write-EventLog -Source "DisableComputers.ps1" -EventId 9091 -LogName Application -Message "Attempted to disable computer $_ because the last password reset was more than $date days ago."
+	Write-EventLog -Source "DisableComputers.ps1" -EventId 9091 -LogName Application -Message "Attempted to disable computer $_ because the last password reset was more than $date days ago."
 	}
 
 
-open task scheduler:
+# open task scheduler:
 
 action:
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
