@@ -1,0 +1,12 @@
+netsh advfirewall show allprofiles
+ 
+netsh advfirewall set allprofiles state on
+ 
+ 
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+ 
+#test network connection
+tnc google.com -port 80
+ 
+ 
+Set-NetFirewallRule -DisplayGroup 'Remote Event Log Management' -Enabled True
