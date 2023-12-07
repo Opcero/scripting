@@ -1,0 +1,4 @@
+# first get info on the adapters interface index
+Get-NetIPInterface
+  # then change it
+New-NetIPAddress -InterfaceIndex <number> -Ipaddress xxx.xxx.xxx.xxx -PrefixLength <8/26/24/etc>
