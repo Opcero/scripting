@@ -1,0 +1,5 @@
+# set the ip address via powershell (see other note)
+Install-WindowsFeature Web-Server -INcludeManagementTools
+  #test via http://localhost or via curl command (a status code of 200 means its working)
+  curl http://localhost -UseBasicParsing
+
