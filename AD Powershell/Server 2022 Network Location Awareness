@@ -1,0 +1,10 @@
+# on domain controllers make DNS a requirement for the NLA service
+# HKLM\SYSTEM\CurrentControlSet\Services\NlaSvc
+# edit "depends on service
+# add DNS to the bottom of the list
+
+# on non domain controllers
+# in services set NlaSvc to delayed start
+
+to quicky fix an issue with being on the wrong network
+Get-NetAdapter -name Ethernet | Disable-NetAdapter; Get-Netadapter -Name Ethernet | Enable-NetAdapter
