@@ -1,0 +1,3 @@
+#creds will be email and email password
+$cred = Get-Credential
+Send-MailMessage -From someone@company.com -To someone@emdnet.com -Subject "SMTP TEST" -Body "I am testing the SMTP Relay Service from PowerShell" -SmtpServer smtp.office365.com -Credential $cred -UseSsl -Port 587
