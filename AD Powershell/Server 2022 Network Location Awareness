@@ -8,3 +8,6 @@
 
 to quicky fix an issue with being on the wrong network
 Get-NetAdapter -name Ethernet | Disable-NetAdapter; Get-Netadapter -Name Ethernet | Enable-NetAdapter
+
+
+# may need get-netconnectionprofile
