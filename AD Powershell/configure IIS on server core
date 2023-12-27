@@ -3,3 +3,12 @@ Install-WindowsFeature Web-Server -INcludeManagementTools
   #test via http://localhost or via curl command (a status code of 200 means its working)
   curl http://localhost -UseBasicParsing
 
+# to manage IIS from the host machine without putting on the network
+# on guest machine
+Install-WindowsFeature Web-mgmt-service -IncludeManagementTools
+
+Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WebManagement\Server -Name EnableRemoteManagement -Value 1
+
+Set-Service -Name WMSVC -StartupType Automatic
+
+Start-Service WMSVC
