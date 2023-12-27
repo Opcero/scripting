@@ -1,0 +1,22 @@
+$Monitors = Get-WmiObject WmiMonitorID -Namespace root\wmi
+$LogFile = "C:\emdtemp\monitor.txt"
+ 
+function Decode {
+	If ($args[0] -is [system.array]) {
+		[system.text.encoding]::ASCII.getstring($args[0])
+	} 
+	Else {
+		"not found"
+	}
+}
+ 
+echo "manufacturer", "name, serial"
+ 
+ 
+forEach ($monitor in $Monitors) {
+	$Manufacturer = Decode $Monitor.ManufacturerName -notmatch 0
+	$Name = Decode $Monitor.UserFriendlyName -notmatch 0
+	$serial = Decode $Monitor.serialnumberid -notmatch 0
+ 
+echo "$Manufacturer, $Name, $serial" >> $LogFile
+}
