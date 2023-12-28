@@ -1,0 +1,17 @@
+# DisableComputers.ps1  
+
+# Remove "-WhatIf"s before putting into production.
+
+Import-Module ActiveDirectory  
+	
+# set a date range	
+$date = (get-date).adddays(-90)
+
+#list of computers that are enabled but the password of which has not been reset in the past <$date> days
+$ListOfComputersToDisable = get-adcomputer -SearchBase "OU=All Proteus Computers,DC=proteusinc,DC=org" -filter {Enabled -eq $TRUE} -Properties PasswordLastSet | Where-Object {($_.PasswordLastSet -lt $Date) -and ($_.PasswordLastSet -ne $NULL)}
+
+# Iterate through the list of computers and disable them and write an event log to Windows\Applications
+$listOfComputersToDisable | ForEach-Object {
+	Disable-ADAccount $_ -WhatIf
+#	Write-EventLog -Source "DisableComputers.ps1" -EventId 9091 -LogName Application -Message "Attempted to disable computer $_ because the last password reset was more than $date days ago."
+	}
