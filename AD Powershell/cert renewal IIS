@@ -1,0 +1,18 @@
+# download cert from godaddy or whomever
+Click on your Start Menu, then click Run.
+In the prompt, type mmc and click OK.
+Click File, then click Add/Remove Snap-in.
+On the new window, click the Add button.
+On the new window, select Certificates and click Add.
+Select Computer account for the snap-in and click Next.
+Click Local computer and click Finish.
+Click Close on the Add Standalone Snap-in window.
+Click OK on the Add/Remove Snap-in window.
+11. right click on the security certificate and click "install certifcate".  Chose "local machine" when going through the wizard and browse the locaton to Personal
+12. If no "key" shows up next to the certificate you can double click on the certificate to see its serial number and copy what you see (its also usually the name of the cert with a 00 prepend)
+13. run certutil -repairstore my "00xxxxxxxxxxxx" from an elevated command prompt to get the validate the hash key
+13a. open the mmc and give the cert a friendly name.
+13.b delete old certs that are no longer valid for clairity.
+14. Open IIS from the start menu button right click default website click edit bindings
+15. edit all of the https sites and add the ssl certificate
+Once this is all done you should be able to see the valid cert on the server as well as navigate to it externally
