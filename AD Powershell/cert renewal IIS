@@ -1,4 +1,5 @@
 # download cert from godaddy or whomever
+# can often find what server is hosting what website by NAT rules on the firewall.
 Click on your Start Menu, then click Run.
 In the prompt, type mmc and click OK.
 Click File, then click Add/Remove Snap-in.
