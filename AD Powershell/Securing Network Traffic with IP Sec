@@ -1,0 +1,24 @@
+A.
+# step 1 configure a certificate server (prefereably not a dc)
+# step 2 confirm that all hosts that need certificates are properly enrolled to whatever internal website they'll use. Use KDC authentication certificate
+# step 3 once this is accomplished we can now begin creating GPOs to require authentication for inound connections
+
+B.
+# gpo settings "<website name connection securiy policy (server)" to apply to server OU
+Computer configuration > Policies > Windows Settings > Security Settings > Windows Defender Firewall with Advanced Security > Windows Defender Firewall with Advanced Security > Connection Security Rules > right click to create new rule
+# select isolation radio button
+# select Require authentication for inbound connections and requestion authenticaiton for outbound connections
+# select computer and user Kerberos V5
+# select domain profile only
+
+# verify that domain policy is present by navigating to servers windows defender and firewall > expand security associations > main mode (clients must have matching policy for IPsec to function)
+
+# gpo settings "<website name> Connection security policy (client)"
+# same as above but only request authentication for inbound and outbound connections
+
+This authenticates communication at layer 3, but does not encrypt payload at the ssl/tls (layer 4).
+# in the quick Mode setting it will show layer 3 encapsulation security but not ESP encryption
+
+C. 
+# to enable encryption edit the server GPO:
+right click on Windows Settings with Advanced Security Settings > properties > IPSec Settings > customize > check 'require encryption for all connection security rules that use these settings'
