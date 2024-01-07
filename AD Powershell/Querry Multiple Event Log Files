@@ -8,7 +8,7 @@ Get-WinEvent -Computer <name> -LogName System -MaxEvents 20 | Format-List
 Clear-Host ; Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System';ID='41'} | Format-List
 
 # To see this outage event in context, select events in the same time range of the filtered event above. 
-# First, set the $DateTime variable to the time of the last event 41
+# First, set the $DateTime variable to the time of the last event 41 (error action, format-list and sort-object are optional)
 Clear-Host ; $DateTime=Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System';ID='41'} -MaxEvents 1 | Select-Object -Expand TimeCreated
 Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System' ;StartTime=$DateTime.addseconds(-60);ExtendTime=$DateTime.addseconds(60);} | Format-List
 
