@@ -13,7 +13,7 @@ Clear-Host ; $DateTime=Get-WinEvent -Computer <name> -FilterHashTable @{LogName=
 Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System' ;StartTime=$DateTime.addseconds(-60);ExtendTime=$DateTime.addseconds(60);} | Format-List
 
 # a more complex script
-$log = Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System', 'Application', 'Security', 'Forwarded Events' ;StartTime=$DateTime.addseconds(-120);ExtendTime=$DateTime.addseconds(15);} -ErrorAction SilentlyContinue | Sort-Object -Property TimeCreated | Format-List | Out-Host -Paging
+$log = Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System', 'Application', 'Security', 'Forwarded Events' ;StartTime=$DateTime.addseconds(-5);ExtendTime=$DateTime.addseconds(5);} -ErrorAction SilentlyContinue | Sort-Object -Property TimeCreated | Format-List | Out-Host -Paging
 $log.count
 
 $log
