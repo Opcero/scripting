@@ -11,3 +11,11 @@ Clear-Host ; Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System';I
 # First, set the $DateTime variable to the time of the last event 41
 Clear-Host ; $DateTime=Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System';ID='41'} -MaxEvents 1 | Select-Object -Expand TimeCreated
 Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System' ;StartTime=$DateTime.addseconds(-60);ExtendTime=$DateTime.addseconds(60);} | Format-List
+
+# a more complex script
+$log = Get-WinEvent -Computer <name> -FilterHashTable @{LogName='System', 'Application', 'Security', 'Forward Events' ;StartTime=$DateTime.addseconds(-120);ExtendTime=$DateTime.addseconds(15);} -ErrorAction SilentlyContinue | Sort-Object -Property TimeCreated | Format-List | Out-Host -Paging
+$log.count
+
+$log
+
+$log | Out-File 'path to file.txt'
