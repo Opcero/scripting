@@ -1,0 +1,41 @@
+# The blue color coded outputs are directories.  Some services may log to their own sub directories.  Some may be in binary format (unreadable)
+ls /var/log
+
+# to see the tail end of the log messages for this parent folder
+tail /var/log/messages
+
+#########
+#Query boot logs with journalctl
+
+# this allows you to read binary system boot logs
+# output all messages with the string "fail" from the last 24 hours and include the 3 events that preceeded and succeed it.
+journalctl --since yesterday | grep -C3 fail
+
+#search logs by severity (err, alert, crit, warning, notice)
+journalctl -p err --since yesterday
+
+# search logs by service (in this case network).  the -i switch makes it case insensitive this will find the service we're looking for
+systemctl list-unit-files --type=service | grep -i network
+
+#once we've found "NetworkManager"
+journalctl --since yesterday -u NetworkManager.service
+# locate a specific PID for the 'su' process (example)
+ps -e
+ps -e | grep su
+
+#then run the following command to view eents related to the su process and output to file
+journalctl _PID=<pid> > /home/smb/su-usage.txt
+
+###########
+Analyze the rsyslog configuration
+# rsyslog is the current implementation of the older syslog daemon.  Lisens on logging sockets and optionally over UDP port 514
+# all are plaintext
+cat -n /etc/rsyslog.conf | less
+
+# test forwarding of event messages.  You need to check in the above conf. where various debug types are logged if at all
+logger -p kern.debug "hello world"
+cat -n /var/log/messages | grep -C3 "hello world"
+logger -p kern.crit "hello world"
+cat -n /var/log/messages | grep -C3 "hello world"
+journalctl | grep -C3 "hello world"
+
