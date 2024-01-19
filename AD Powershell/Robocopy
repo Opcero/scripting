@@ -1,0 +1,7 @@
+# if robocopying any files connected to a service, stop the service before beginning the copy.
+
+<service> /stop
+
+robocopy C:\folder X:\newdrivepath /MIR
+
+Remove-Item C:\folder -recurse
