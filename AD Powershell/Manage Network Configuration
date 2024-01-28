@@ -1,0 +1,17 @@
+########
+apply static address
+########
+# report the network adapter's link-layer/ethernet properties
+Get-NetAdapter | Format-List
+
+# view current IP config
+Get-NetIpConfiguration -Detailed
+ipconfig /all
+
+# To apply a static use the following three cmdlets.
+# apply static, netmask, this will also disable dhcp
+New-Net-IPAddress -InterfaceAlias 'Ethernet' -IPAddress x.x.x.x -PrefixLength xx
+# add default gateway and DNS server
+New-NetRoute -InterfaceAlias 'Ethernet' -DestinationPrefix 0.0.0.0/0 -NextHop x.x.x.x
+Set-DNSClientServerAddress -InterfaceAlias 'Ethernet' -ServerAddress x.x.x.x
+# verify with one of the above view cmdlets
