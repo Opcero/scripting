@@ -14,4 +14,7 @@ New-Net-IPAddress -InterfaceAlias 'Ethernet' -IPAddress x.x.x.x -PrefixLength xx
 # add default gateway and DNS server
 New-NetRoute -InterfaceAlias 'Ethernet' -DestinationPrefix 0.0.0.0/0 -NextHop x.x.x.x
 Set-DNSClientServerAddress -InterfaceAlias 'Ethernet' -ServerAddress x.x.x.x
+Set-DNSClientServerAddress -InterfaceAlias 'Ethernet' -ServerAddresses ('x.x.x.x','x.x.x.x',etc)
+# flush DNS and register as a host record on the DNS server
+ipconfig /flushdns ; ipconfig /registerdns
 # verify with one of the above view cmdlets
