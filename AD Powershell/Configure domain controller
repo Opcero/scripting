@@ -1,0 +1,11 @@
+After setting a static IP (see other script)
+Install-WindowsFeature -name ad-domain-services,dhcp,dns -Includeallsubfeature -Includemanagementtools
+
+# On server manager click refresh
+# Select the notification icon and promote the server to domain controller
+# Go through the wizard, ignore DNS warning
+# set the DNS resolvers (using other script)
+# flush and registerdns (using other script) Good for DCs to list the other DC as primary DNS and their own and loopback ips as secondaries for resiliency.
+
+# test DNS settings
+resolve-DNSName -Name domain.local -Type SOA
