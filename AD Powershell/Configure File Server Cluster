@@ -1,4 +1,6 @@
-# to understand the following from the top of the pyramid to the bottom:
+# The iscsi target has already been configured
+# we will cluster to file servers to a target iscsi server
+to understand the following from the top of the pyramid to the bottom:
 # iscsi will show m:\vd0, m:\vd1, m:\vd2 as different LUN blocks
 # volume will show info about drive m:\
 # virtualdisk will show info about the md0 the virtual disk
@@ -40,3 +42,39 @@ Get-StoragePool | Format-list
 
 # to get ip address of taret + iqns
 Restart-Service -Name WinTarget
+
+##########
+# connect two initiators (MS11A and MS11B) to the target
+##########
+# From server manager on the initiator: Tools > iSCSI Initiator, select the 'configuration' tab
+# target initiator name is a fqdn and target is the ip address of the target
+# enable multipath (multipath is required to attach multiple servers to same disks without causing conflicts)
+# in advanced settings, enable CHAP (see linux server config for more details)
+
+# useful commands if target won't connect
+Get-WinEvent -Log Microsoft-Windows-iSCSITarget-Service/Admin
+Restart-Service -Name WinTarget
+
+# In server manager now go to File and Storage Services > Disks and configure the iSCSI disk
+# right-click the disk and bring online
+# right-click and create a volume
+
+# do the same for the second initiator server.
+
+############
+# Configure Cluster
+###########
+# On the iscsi target server, open start > Windows administratove tools > Failover Cluster Manager
+# select Validate configuration > next > add ms11a and ms11b
+# system > uncheck list software updates
+# system configuration > uncheck validate software update levels
+# after this completes check the "Create the cluster now using the validated nodes" box.
+# create a 'cluster name' CS11
+
+# this cluster object must be granted permission to create computer object in ADUC.  Either per device or via delegate access
+# per device below:
+# open ADUC > view > advanced features
+# expand the domain and right click Servers OU and select Properties (our cluster 'CS11' will be here with the two initiators)
+# on the security tab select Advanced > add
+# select a principal. select Object types , then check the box for Computers
+# in Permissions check Create computer object.
