@@ -1,0 +1,42 @@
+# to understand the following from the top of the pyramid to the bottom:
+# iscsi will show m:\vd0, m:\vd1, m:\vd2 as different LUN blocks
+# volume will show info about drive m:\
+# virtualdisk will show info about the md0 the virtual disk
+# storage pool will show info about st10-pool01 and, in this example in a mirror (raid 1) we then look to...
+# physical disk to see id1 and id2 the two mirrored 'disks'
+
+#    m\vd0  m:\vd1 m:\vd2
+#           m:
+#          md0
+#       st10-pool01
+#      --------------
+#        |       |
+#       --      --
+#       id1     id2
+
+# make note of target server's ip address
+ipconfig
+
+# note iSCSI qualified names (iqn) and CHAP authentication are configured under LUN mappings (in this example anyway).
+Get-IscsiServerTarget | Format-List
+
+# show the volumes available to the target server.
+get-disk
+
+# report configuration of the volumes available (aka its drive letter etc associated with the disk)
+get-volume
+
+# report additional information about the volume such as resiliancy (aka raid type)
+get-Volume -Driveletter <letter> | Format-List
+
+# 
+get-virtualdisk | format-list
+
+# see the 'hardware' disk device
+get-phhsicaldisk | format-list
+
+#
+Get-StoragePool | Format-list
+
+# to get ip address of taret + iqns
+Restart-Service -Name WinTarget
