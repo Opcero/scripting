@@ -78,3 +78,23 @@ Restart-Service -Name WinTarget
 # on the security tab select Advanced > add
 # select a principal. select Object types , then check the box for Computers
 # in Permissions check Create computer object.
+
+###########
+# Avoiding the split brain
+###########
+# windows failover uses a quorum system when two nodes cannot communicate to determine which node will run the serverice and write changes to the shared disks.
+# this 'disk witness' needs to be configured. A 1GB storage disk can be create in the iscsi for this purpose.  This is automatically configured as long as you create it as part of the original cluster
+# you can see this is Failover Cluster manager Storage > disks
+
+#########
+# configure cluster role
+########
+# in failover cluster manager select Roles > File Server > Next > general use
+# right click on disk > add file share
+# UNC path will be \\file server\file share
+# will be visible in server manager > file and storage services > disks
+# failover node will be 'read only'
+
+#Test resiliency
+# turn off primary node
+# the i/o path to the storage area of course is still a single point of failure however~
