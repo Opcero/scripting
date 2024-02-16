@@ -1,0 +1,14 @@
+# side load or boot to f8 repair
+
+list disk
+select disk 0
+clean all
+list partition
+
+create partition primary
+select partition 1
+format fs=ntfs
+assign letter=m
+exit
+
+format m: /p:4
