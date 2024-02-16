@@ -1,0 +1,3 @@
+# after installation press enter to change default Administrator password when prompted.
+# then at the command line type the following to setup server name, date and time, remote access, ip address, etc.  This text gui is basically the same as the normal GUI.
+sconfig
